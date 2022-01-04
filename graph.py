@@ -1,11 +1,13 @@
 """ Класс графа """
 
 # Правильный ввод зависимости: 10x + 12 или 0x + 12 или 3x
-FLOW = 6 # Общий поток
+MAX = 9999.1 # Условный максимум
 
 from os import PathLike
+from typing import NewType
 import networkx as nx
 from networkx.algorithms.shortest_paths import weighted
+from networkx.generators.random_graphs import newman_watts_strogatz_graph
 from networkx.readwrite import edgelist
 from numpy.lib.function_base import append
 import pandas as pd
@@ -21,6 +23,8 @@ class Graph:
     Puths = [] # Список всех путей от истока до стока
     PuthsMatrix = [] # Матрица путей для рёбер
     EdgesExpressionList = [] # Список функций для рёбер
+    Flow = 0
+    BalanceTime = 0 # Общее время в пути для равновесия
     PuthsCount = 0
     VertexCount = 0
     EdgesCount = 0
@@ -36,9 +40,11 @@ class Graph:
                     self.EdgesCount += 1
                     temp_S = int(i.split()[0])-1
                     self.StartVertices.append(temp_S)
+                    
                     temp = i.split()[2]
-                    temp_F = int(temp[0:1])-1
+                    temp_F = int(temp[0:len(temp)-1])-1
                     self.FinishVertices.append(temp_F)
+                    
                     if(temp_S not in verticeslist):
                         verticeslist.append(temp_S)
                         self.VertexCount += 1
@@ -52,10 +58,27 @@ class Graph:
                             
             for i in range(self.EdgesCount): # Добавляем 1, если есть ребро
                 self.Matrix[self.StartVertices[i]][self.FinishVertices[i]] = 1
+    
+    def ResetGraph(self):
+        self.Puths = []
+        self.PuthsMatrix = []
+        self.EdgesExpressionList = []
+        self.Flow = 0
+        self.BalanceTime = 0
+        self.PuthsCount = 0
+    
+    def SetFlow(self, flow):
+        self.Flow = flow
             
     def ShowGraph(self):
-        DF = pd.DataFrame({'S': self.StartVertices, 'F': self.FinishVertices}) # Формируем dataframe рёбер
-        print(DF) # Лог вывод
+        copy_start = []
+        copy_finish = []
+        
+        for i in range(self.EdgesCount): # На рисунке номера вершин больше на 1
+            copy_start.append(self.StartVertices[i]+1)
+            copy_finish.append(self.FinishVertices[i]+1)
+        
+        DF = pd.DataFrame({'S': copy_start, 'F': copy_finish}) # Формируем dataframe рёбер
         
         G = nx.from_pandas_edgelist(df=DF, source='S', target='F', create_using=nx.DiGraph()) # Присоединяем dataframe к графу
 
@@ -77,6 +100,7 @@ class Graph:
                     self.GetPuths(matrix, i, finish, visited.copy())
     
     def GetPuthMatrix(self):
+        self.PuthsMatrix= []
         for i in range(self.EdgesCount):
             self.PuthsMatrix.append([0]*self.PuthsCount)
             
@@ -102,36 +126,11 @@ class Graph:
                 self.coef = np.append(self.coef, int(wx))
             if(len(wx)+1 != len(expression)):
                 if(expression.split()[1] == '-'):
-                    self.free = np.append(self.free, int(expression.split()[2])*(-1))
+                    self.free = np.append(self.free, float(expression.split()[2])*(-1))
                 else:
-                    self.free = np.append(self.free, int(expression.split()[2]))
+                    self.free = np.append(self.free, float(expression.split()[2]))
             else:
                 self.free = np.append(self.free, 0)
-            
-    # Составление и решение уравнения для двух путей
-    def EqualTime(self, EdgesExpressionList, Paths, NpathA, NpathB):
-        coefs = np.array([0]*self.PuthsCount)
-        frees = np.array([0])
-        
-        for i in range(self.EdgesCount):
-            if Paths[i][NpathA]: # Если ребро учавствует в пути
-                for j in range(self.PuthsCount): # Оставльные потоки тоже нужно учитывать
-                    if Paths[i][j]:
-                        coefs[j] += EdgesExpressionList[i].coef
-                        frees[0] -= EdgesExpressionList[i].free
-            if Paths[i][NpathB]:
-                for j in range(self.PuthsCount): # Минусуем все переменные, т.к перенос
-                    if Paths[i][j]:
-                        coefs[j] -= EdgesExpressionList[i].coef
-                        frees[0] += EdgesExpressionList[i].free
-        
-        print("DEBUG func(EqualTime)", coefs)
-        print("DEBUG func(EqualTime)", frees)
-        
-        result = []
-        result.append(coefs)
-        result.append(frees)
-        return result
     
     def PrepareExpressionList(self, text: str):
         j = 0
@@ -143,23 +142,45 @@ class Graph:
             j += 1
             self.EdgesExpressionList.append(self.Edge(exp))
             
+    # Составление и решение уравнения для двух путей
+    def EqualTime(self, EdgesExpressionList, Paths, InBalance: list, NpathA, NpathB):
+        coefs = np.array([0]*self.PuthsCount)
+        frees = np.array([0], dtype="float")
+        
+        for i in range(self.EdgesCount):
+            if Paths[i][NpathA]: # Если ребро учавствует в пути
+                for j in range(self.PuthsCount): # Оставльные потоки тоже нужно учитывать
+                    if Paths[i][j] and InBalance[j]:
+                        coefs[j] += EdgesExpressionList[i].coef
+                        frees[0] -= EdgesExpressionList[i].free
+            if Paths[i][NpathB]:
+                for j in range(self.PuthsCount): # Минусуем все переменные, т.к перенос
+                    if Paths[i][j] and InBalance[j]:
+                        coefs[j] -= EdgesExpressionList[i].coef
+                        frees[0] += EdgesExpressionList[i].free
+        
+        result = []
+        result.append(coefs)
+        result.append(frees)
+        return result
+            
     def BalanceEquation(self, InBalance: list): # Поиск равновесного распределения
-        coefs = np.array([], dtype="int32")
-        frees = np.array([], dtype="int32")
+        coefs = np.array([])
+        frees = np.array([], dtype="float")
         EquationCount = 0
         
         for i in range(self.PuthsCount):
             if InBalance[i] == 1:
                 for j in range(i+1, self.PuthsCount):
                     if InBalance[j] == 1:
-                        result = self.EqualTime(self.EdgesExpressionList, self.PuthsMatrix, i, j)
+                        result = self.EqualTime(self.EdgesExpressionList, self.PuthsMatrix, InBalance, i, j)
                         coefs = np.append(coefs, result[0])
                         frees = np.append(frees, result[1])
                         EquationCount += 1
-                break;
+                break
                 
         coefs = np.append(coefs, InBalance)
-        frees = np.append(frees, FLOW)
+        frees = np.append(frees, float(self.Flow))
         EquationCount += 1
         
         for j in range(len(InBalance)):
@@ -167,21 +188,13 @@ class Graph:
             if InBalance[j] == 0:
                 temp[j] = 1
                 coefs = np.append(coefs, np.array(temp))
-                frees = np.append(frees, 0)
+                frees = np.append(frees, float(0))
         
         coefs = np.reshape(coefs, (self.PuthsCount, self.PuthsCount))
         frees = np.reshape(frees, (self.PuthsCount, 1))
         
         res = solve(coefs, frees)
         
-        IsFloat = False
-        for i in range(self.PuthsCount):
-            tod = str(res[i]).index('.')
-            if len(str(res[i])[tod:]) != 2:
-                IsFloat = True
-        
-        if IsFloat:
-            return [0]*self.PuthsCount
         return res
     
     def PathTime(self, PuthNum, Balance: list):
@@ -190,12 +203,13 @@ class Graph:
             if self.PuthsMatrix[i][PuthNum] == 1:
                 for j in range(self.PuthsCount):
                     if self.PuthsMatrix[i][j] == 1:
-                        res += self.EdgesExpressionList[i].coef*Balance[j] + self.EdgesExpressionList[i].free
+                        res += self.EdgesExpressionList[i].coef[0]*Balance[j]
+                        res += self.EdgesExpressionList[i].free
         return res
     
-    def FindBalance(self):
-        AllBalances = []
-        
+    # Поиск равновесия
+    def FindBalance(self):  
+        AllBalances = []      
         # Находим все возможные распределения
         InBalance = []
         for i in range(1, 2**self.PuthsCount):
@@ -204,14 +218,16 @@ class Graph:
             for j in range(len(bin(2**self.PuthsCount-1)[2:])):
                 temp[j] = int(BinInBalance[j])
             InBalance.append(temp)
-            print(temp)
         
         # Идём по распределениям
         for i in range(len(InBalance)):
             GoodBalance = True
             res = self.BalanceEquation(InBalance[i])
-            if np.sum(res) == 0: # Если время для учавствующих путей разное
-                continue
+            
+            for j in res: # Все потоки не отрицательны
+                if j < 0:
+                    GoodBalance = False
+                    break;
             
             InBalanceIndex = InBalance[i].index(1)
             for j in range(len(InBalance[i])):
@@ -222,22 +238,41 @@ class Graph:
             
             if(GoodBalance): 
                 AllBalances.append(res)
-                
+                self.BalanceTime = self.PathTime(InBalanceIndex, res)
+                    
         return AllBalances
-            
-                    
-                        
-                        
-                    
-            
-            
-            
-            
-            
         
+    # Поиск неэффективной дороги
+    def FindUneffective(self):
+        UneffectiveEdges = []
+        OLD_TIME = self.BalanceTime
+        for i in range(self.EdgesCount):
+            temp = self.EdgesExpressionList[i].free # Запоминаем свободный член
+            self.EdgesExpressionList[i].free = MAX # Закрываем дорогу
         
-    
+            NewAllBalances = self.FindBalance()
         
-        
+            if self.BalanceTime < OLD_TIME: # Если общее время меньше времени равновесия
+                temp_time = []
+                temp_time.append(i)
+                temp_time.append(self.BalanceTime)
+                UneffectiveEdges.append(temp_time)
             
+            self.EdgesExpressionList[i].free = temp # Открываем дорогу, чтобы проверить другие
+            self.FindBalance()
+            
+        if len(UneffectiveEdges) > 1:
+            old_frees = []
+            
+            for i in range(len(UneffectiveEdges)):
+                old_frees.append(self.EdgesExpressionList[UneffectiveEdges[i][0]].free)
+                self.EdgesExpressionList[UneffectiveEdges[i][0]].free = MAX # Закрываем все дороги
+            self.FindBalance()
+            UneffectiveEdges.append(self.BalanceTime)
+            
+            for i in range(len(UneffectiveEdges)-1):
+                self.EdgesExpressionList[UneffectiveEdges[i][0]].free = old_frees[i] # Открываем все дороги
+            self.FindBalance()
+        
+        return UneffectiveEdges
         

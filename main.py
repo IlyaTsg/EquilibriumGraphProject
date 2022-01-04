@@ -12,9 +12,11 @@ import graph
 import numpy as np
 from scipy.linalg import solve
 
-class Ui_MainWindow(object):   
+class Ui_MainWindow(object):
     
     NewGraph = graph.Graph()
+    InfoIsReady = False
+    BalanceIsReady = False
     
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
@@ -31,9 +33,9 @@ class Ui_MainWindow(object):
         self.label.setFont(font)
         self.label.setObjectName("label")
         self.EntryOrder = QtWidgets.QLabel(self.centralwidget)
-        self.EntryOrder.setGeometry(QtCore.QRect(30, 310, 71, 181))
+        self.EntryOrder.setGeometry(QtCore.QRect(20, 310, 81, 241))
         font = QtGui.QFont()
-        font.setPointSize(12)
+        font.setPointSize(9)
         self.EntryOrder.setFont(font)
         self.EntryOrder.setLayoutDirection(QtCore.Qt.LeftToRight)
         self.EntryOrder.setText("")
@@ -51,22 +53,22 @@ class Ui_MainWindow(object):
         self.ResultWindow = QtWidgets.QLabel(self.centralwidget)
         self.ResultWindow.setGeometry(QtCore.QRect(320, 20, 451, 231))
         font = QtGui.QFont()
-        font.setPointSize(14)
+        font.setPointSize(10)
         self.ResultWindow.setFont(font)
         self.ResultWindow.setText("")
         self.ResultWindow.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
         self.ResultWindow.setObjectName("ResultWindow")
         self.FuncReady = QtWidgets.QPushButton(self.centralwidget)
-        self.FuncReady.setGeometry(QtCore.QRect(180, 500, 141, 41))
+        self.FuncReady.setGeometry(QtCore.QRect(350, 510, 141, 41))
         self.FuncReady.setObjectName("FuncReady")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
-        self.label_2.setGeometry(QtCore.QRect(520, 310, 61, 21))
+        self.label_2.setGeometry(QtCore.QRect(510, 310, 61, 21))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
-        self.label_3.setGeometry(QtCore.QRect(520, 360, 51, 21))
+        self.label_3.setGeometry(QtCore.QRect(510, 360, 51, 21))
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label_3.setFont(font)
@@ -75,11 +77,17 @@ class Ui_MainWindow(object):
         self.StartVertex.setGeometry(QtCore.QRect(580, 310, 113, 22))
         self.StartVertex.setObjectName("StartVertex")
         self.FinishVertex = QtWidgets.QLineEdit(self.centralwidget)
-        self.FinishVertex.setGeometry(QtCore.QRect(570, 360, 113, 22))
+        self.FinishVertex.setGeometry(QtCore.QRect(580, 360, 113, 22))
         self.FinishVertex.setObjectName("FinishVertex")
-        self.FuncReady_2 = QtWidgets.QPushButton(self.centralwidget)
-        self.FuncReady_2.setGeometry(QtCore.QRect(520, 400, 141, 41))
-        self.FuncReady_2.setObjectName("FuncReady_2")
+        self.label_4 = QtWidgets.QLabel(self.centralwidget)
+        self.label_4.setGeometry(QtCore.QRect(510, 410, 61, 21))
+        font = QtGui.QFont()
+        font.setPointSize(14)
+        self.label_4.setFont(font)
+        self.label_4.setObjectName("label_4")
+        self.FinishVertex_2 = QtWidgets.QLineEdit(self.centralwidget)
+        self.FinishVertex_2.setGeometry(QtCore.QRect(580, 410, 113, 22))
+        self.FinishVertex_2.setObjectName("FinishVertex_2")
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
@@ -100,8 +108,8 @@ class Ui_MainWindow(object):
         self.EditFunc.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
-"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:12pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
+"</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p></body></html>"))
         self.label.setText(_translate("MainWindow", "Ввод функций рёбер"))
         self.ShowGraph.setText(_translate("MainWindow", "Показать граф"))
         self.DoBalance.setText(_translate("MainWindow", "Рассчитать равновесное распределение"))
@@ -109,57 +117,91 @@ class Ui_MainWindow(object):
         self.FuncReady.setText(_translate("MainWindow", "Ввести"))
         self.label_2.setText(_translate("MainWindow", "Исток:"))
         self.label_3.setText(_translate("MainWindow", "Сток:"))
-        self.FuncReady_2.setText(_translate("MainWindow", "Ввести"))
-
+        self.label_4.setText(_translate("MainWindow", "Поток:"))
+        
     def AddFunction(self):
         self.ShowGraph.clicked.connect(lambda: self.DrawGraph())
-        self.FuncReady_2.clicked.connect(lambda: self.GetPaths())
         self.DoBalance.clicked.connect(lambda: self.ShowBalance())
         self.FuncReady.clicked.connect(lambda: self.PrepareExpressions())
+        self.ShowBadRoad.clicked.connect(lambda: self.FindBadRoad())
         
         text = ""
         for i in range(self.NewGraph.EdgesCount):
-            text += str(self.NewGraph.StartVertices[i]) + "->" + str(self.NewGraph.FinishVertices[i]) + "\n"
+            text += str(self.NewGraph.StartVertices[i]+1) + "->" + str(self.NewGraph.FinishVertices[i]+1) + "\n"
         self.EntryOrder.setText(text)
             
     
     def DrawGraph(self):  
         self.NewGraph.ShowGraph()
         
-    def GetPaths(self):
-        self.NewGraph.GetPuths(self.NewGraph.Matrix, int(self.StartVertex.text()), int(self.FinishVertex.text()), [])
-        self.NewGraph.GetPuthMatrix()
-        
     def PrepareExpressions(self):
+        self.NewGraph.ResetGraph()
+        self.BalanceIsReady = False
+        self.InfoIsReady = False
+        self.NewGraph.GetPuths(self.NewGraph.Matrix, int(self.StartVertex.text())-1, int(self.FinishVertex.text())-1, [])
+        self.NewGraph.GetPuthMatrix()
+        self.NewGraph.SetFlow(int(self.FinishVertex_2.text()))
         text = self.EditFunc.toPlainText()
         self.NewGraph.PrepareExpressionList(text)
+        self.InfoIsReady = True
 
     def ShowBalance(self):
-        AllBalances = self.NewGraph.FindBalance()
-    
         text = ""
         self.ResultWindow.clear()
         
-        # Вывод всех путей от S до F
-        for i in range(len(self.NewGraph.Puths)):
-            text += "Путь " + str(i+1) +": "
-            for j in range(len(self.NewGraph.Puths[i])):
-                text += str(self.NewGraph.Puths[i][j])
-                if j != len(self.NewGraph.Puths[i])-1:
-                    text += "->"
-                else:
-                    text += "\n"
-                    
-        if len(AllBalances) == 0:
-            text += "Равнновесные распределения не найдены\n"
-        else:
-            text += "Равновесное распределение: \n"
+        if self.InfoIsReady: 
+            AllBalances = self.NewGraph.FindBalance()
+            
+            # Вывод всех путей от S до F
             for i in range(len(self.NewGraph.Puths)):
                 text += "Путь " + str(i+1) +": "
-                for j in range(len(AllBalances)):
-                    text += str(AllBalances[j][i])[1:len(str(AllBalances[j][i]))-2]
-                    text += "\n"            
+                for j in range(len(self.NewGraph.Puths[i])):
+                    text += str(self.NewGraph.Puths[i][j]+1)
+                    if j != len(self.NewGraph.Puths[i])-1:
+                        text += "->"
+                    else:
+                        text += "\n"
+                        
+            if len(AllBalances) == 0:
+                text += "Равнновесные распределения не найдены\n"
+            else:
+                self.BalanceIsReady = True
+                text += "Равновесное распределение: \n"
+                for i in range(len(self.NewGraph.Puths)):
+                    text += "Путь " + str(i+1) +": "
+                    for j in range(len(AllBalances)):
+                        text += str(round(AllBalances[j][i][0], 2))
+                        text += " "
+                    text += "\n" 
+                
+                text += "Время: " + str(round(self.NewGraph.BalanceTime[0], 2)) + "\n"     
+        else:
+            text += "Введите информацию о графе!\n"
             
+        self.ResultWindow.setText(text)
+        
+    def FindBadRoad(self):
+        text = ""
+        if self.BalanceIsReady:
+            if self.InfoIsReady: 
+                res = self.NewGraph.FindUneffective()
+                if len(res) != 0:
+                    if len(res) > 1:
+                        l = len(res)-1
+                    else:
+                        l = len(res)
+                    for i in range(l):
+                        text += "Неэффективная дорога: " + str(self.NewGraph.StartVertices[res[i][0]]+1) + " -> " + str(self.NewGraph.FinishVertices[res[i][0]]+1) + "\n"
+                        text += "Время без данной дороги: " + str(round(res[i][1][0], 2)) + "\n"     
+                    
+                    if len(res) > 1:
+                        text += "Время без всех неэффективных дорог: " + str(res[len(res)-1][0]) + "\n"   
+                else:
+                    text += "Неэффективные дороги не найдены \n"
+            else:
+                text += "Введите информацию о графе!\n"
+        else:
+            text += "Сначала найдите распределение!\n"
         self.ResultWindow.setText(text)
 
 if __name__ == "__main__":
