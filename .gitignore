@@ -1,3 +1,5 @@
 architecture.jpg
 graph.dot
 __pycache__
+dist
+build
