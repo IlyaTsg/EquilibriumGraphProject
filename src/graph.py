@@ -199,14 +199,24 @@ class Graph:
         
         return res
     
-    def PathTime(self, PuthNum, Balance: list):
+    def PathTime(self, PuthNum, Balance: list, mode):
         res = 0
-        for i in range(self.EdgesCount):
-            if self.PuthsMatrix[i][PuthNum] == 1:
-                for j in range(self.PuthsCount):
-                    if self.PuthsMatrix[i][j] == 1:
-                        res += self.EdgesExpressionList[i].coef[0]*Balance[j]
-                        res += self.EdgesExpressionList[i].free
+        if mode == 1:
+            for i in range(self.EdgesCount):
+                if self.PuthsMatrix[i][PuthNum] == 1:
+                    for j in range(self.PuthsCount):
+                        if self.PuthsMatrix[i][j] == 1:
+                            if Balance[j]:
+                                res += self.EdgesExpressionList[i].coef[0]*Balance[j]
+                                res += self.EdgesExpressionList[i].free
+        else:
+            for i in range(self.EdgesCount):
+                if self.PuthsMatrix[i][PuthNum] == 1:
+                    for j in range(self.PuthsCount):
+                        if self.PuthsMatrix[i][j] == 1:
+                            res += self.EdgesExpressionList[i].coef[0]*Balance[j]
+                            if(j == PuthNum or Balance[j] != 0):
+                                res += self.EdgesExpressionList[i].free
         return res
     
     # Поиск равновесия
@@ -234,13 +244,13 @@ class Graph:
             InBalanceIndex = InBalance[i].index(1)
             for j in range(len(InBalance[i])):
                 if InBalance[i][j] == 0: # Если не входит в распределение
-                    if self.PathTime(j, res) < self.PathTime(InBalanceIndex, res): # Для всех неиспользуемых время в пути не ниже используемых
+                    if self.PathTime(j, res, 0) < self.PathTime(InBalanceIndex, res, 0): # Для всех неиспользуемых время в пути не ниже используемых
                         GoodBalance = False
                         break
             
             if(GoodBalance): 
                 AllBalances.append(res)
-                self.BalanceTime = self.PathTime(InBalanceIndex, res)
+                self.BalanceTime = self.PathTime(InBalanceIndex, res, 1)
                     
         return AllBalances
         
