@@ -1,9 +1,6 @@
 """ Класс графа """
 
-# Правильный ввод зависимости: 10x + 12 или 0x + 12 или 3x
-MAX = 9999.1 # Условный максимум
-
-from os import PathLike
+from os import PathLike, execlp
 from typing import NewType
 import networkx as nx
 from networkx.algorithms.shortest_paths import weighted
@@ -15,6 +12,8 @@ import matplotlib.pyplot as plt
 
 import numpy as np
 from scipy.linalg import solve
+
+MAX = 9999.1 # Условный максимум
 
 class Graph:
     StartVertices = [] # Стратовые вершины
@@ -130,7 +129,7 @@ class Graph:
                 else:
                     self.free = np.append(self.free, float(expression.split()[2]))
             else:
-                self.free = np.append(self.free, 0)
+                self.free = np.append(self.free, float(0))
     
     def PrepareExpressionList(self, text: str):
         j = 0
@@ -193,7 +192,10 @@ class Graph:
         coefs = np.reshape(coefs, (self.PuthsCount, self.PuthsCount))
         frees = np.reshape(frees, (self.PuthsCount, 1))
         
-        res = solve(coefs, frees)
+        try:
+            res = solve(coefs, frees)
+        except np.linalg.LinAlgError:
+            res = [-1]*len(InBalance)
         
         return res
     
@@ -227,7 +229,7 @@ class Graph:
             for j in res: # Все потоки не отрицательны
                 if j < 0:
                     GoodBalance = False
-                    break;
+                    break
             
             InBalanceIndex = InBalance[i].index(1)
             for j in range(len(InBalance[i])):

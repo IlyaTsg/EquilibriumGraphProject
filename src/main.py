@@ -20,14 +20,17 @@ class Ui_MainWindow(object):
     
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(800, 600)
+        MainWindow.resize(819, 616)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.EditFunc = QtWidgets.QTextEdit(self.centralwidget)
         self.EditFunc.setGeometry(QtCore.QRect(100, 310, 361, 181))
+        font = QtGui.QFont()
+        font.setPointSize(9)
+        self.EditFunc.setFont(font)
         self.EditFunc.setObjectName("EditFunc")
         self.label = QtWidgets.QLabel(self.centralwidget)
-        self.label.setGeometry(QtCore.QRect(20, 270, 221, 31))
+        self.label.setGeometry(QtCore.QRect(20, 270, 441, 31))
         font = QtGui.QFont()
         font.setPointSize(16)
         self.label.setFont(font)
@@ -50,14 +53,6 @@ class Ui_MainWindow(object):
         self.ShowBadRoad = QtWidgets.QPushButton(self.centralwidget)
         self.ShowBadRoad.setGeometry(QtCore.QRect(20, 140, 251, 41))
         self.ShowBadRoad.setObjectName("ShowBadRoad")
-        self.ResultWindow = QtWidgets.QLabel(self.centralwidget)
-        self.ResultWindow.setGeometry(QtCore.QRect(320, 20, 451, 231))
-        font = QtGui.QFont()
-        font.setPointSize(10)
-        self.ResultWindow.setFont(font)
-        self.ResultWindow.setText("")
-        self.ResultWindow.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.ResultWindow.setObjectName("ResultWindow")
         self.FuncReady = QtWidgets.QPushButton(self.centralwidget)
         self.FuncReady.setGeometry(QtCore.QRect(350, 510, 141, 41))
         self.FuncReady.setObjectName("FuncReady")
@@ -88,9 +83,17 @@ class Ui_MainWindow(object):
         self.FinishVertex_2 = QtWidgets.QLineEdit(self.centralwidget)
         self.FinishVertex_2.setGeometry(QtCore.QRect(580, 410, 113, 22))
         self.FinishVertex_2.setObjectName("FinishVertex_2")
+        self.ResultWindow = QtWidgets.QScrollArea(self.centralwidget)
+        self.ResultWindow.setGeometry(QtCore.QRect(320, 20, 451, 231))
+        self.ResultWindow.setWidgetResizable(True)
+        self.ResultWindow.setObjectName("ResultWindow")
+        self.scrollAreaWidgetContents = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 449, 229))
+        self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
+        self.ResultWindow.setWidget(self.scrollAreaWidgetContents)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
-        self.menubar.setGeometry(QtCore.QRect(0, 0, 800, 22))
+        self.menubar.setGeometry(QtCore.QRect(0, 0, 819, 22))
         self.menubar.setObjectName("menubar")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
@@ -104,12 +107,12 @@ class Ui_MainWindow(object):
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
-        MainWindow.setWindowTitle(_translate("BalanceGraph", "BalanceGraph"))
+        MainWindow.setWindowTitle(_translate("MainWindow", "BalanceGraph"))
         self.EditFunc.setHtml(_translate("MainWindow", "<!DOCTYPE HTML PUBLIC \"-//W3C//DTD HTML 4.0//EN\" \"http://www.w3.org/TR/REC-html40/strict.dtd\">\n"
 "<html><head><meta name=\"qrichtext\" content=\"1\" /><meta charset=\"utf-8\" /><style type=\"text/css\">\n"
 "p, li { white-space: pre-wrap; }\n"
 "</style></head><body style=\" font-family:\'Segoe UI\'; font-size:9pt; font-weight:400; font-style:normal;\">\n"
-"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px; font-size:12pt;\"><br /></p></body></html>"))
+"<p style=\"-qt-paragraph-type:empty; margin-top:0px; margin-bottom:0px; margin-left:0px; margin-right:0px; -qt-block-indent:0; text-indent:0px;\"><br /></p></body></html>"))
         self.label.setText(_translate("MainWindow", "Ввод функций рёбер"))
         self.ShowGraph.setText(_translate("MainWindow", "Показать граф"))
         self.DoBalance.setText(_translate("MainWindow", "Рассчитать равновесное распределение"))
@@ -118,7 +121,7 @@ class Ui_MainWindow(object):
         self.label_2.setText(_translate("MainWindow", "Исток:"))
         self.label_3.setText(_translate("MainWindow", "Сток:"))
         self.label_4.setText(_translate("MainWindow", "Поток:"))
-        
+
     def AddFunction(self):
         self.ShowGraph.clicked.connect(lambda: self.DrawGraph())
         self.DoBalance.clicked.connect(lambda: self.ShowBalance())
@@ -130,8 +133,7 @@ class Ui_MainWindow(object):
             text += str(self.NewGraph.StartVertices[i]+1) + "->" + str(self.NewGraph.FinishVertices[i]+1) + "\n"
         self.EntryOrder.setText(text)
             
-    
-    def DrawGraph(self):  
+    def DrawGraph(self):
         self.NewGraph.ShowGraph()
         
     def PrepareExpressions(self):
@@ -147,7 +149,6 @@ class Ui_MainWindow(object):
 
     def ShowBalance(self):
         text = ""
-        self.ResultWindow.clear()
         
         if self.InfoIsReady: 
             AllBalances = self.NewGraph.FindBalance()
@@ -170,6 +171,7 @@ class Ui_MainWindow(object):
                 for i in range(len(self.NewGraph.Puths)):
                     text += "Путь " + str(i+1) +": "
                     for j in range(len(AllBalances)):
+                        text += str(j+1) + ") "
                         text += str(round(AllBalances[j][i][0], 2))
                         text += " "
                     text += "\n" 
@@ -178,7 +180,8 @@ class Ui_MainWindow(object):
         else:
             text += "Введите информацию о графе!\n"
             
-        self.ResultWindow.setText(text)
+        widget = QtWidgets.QLabel(text)
+        self.ResultWindow.setWidget(widget)
         
     def FindBadRoad(self):
         text = ""
@@ -202,7 +205,9 @@ class Ui_MainWindow(object):
                 text += "Введите информацию о графе!\n"
         else:
             text += "Сначала найдите распределение!\n"
-        self.ResultWindow.setText(text)
+        
+        widget = QtWidgets.QLabel(text)
+        self.ResultWindow.setWidget(widget)
 
 if __name__ == "__main__":
     import sys
