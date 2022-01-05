@@ -143,15 +143,25 @@ class Ui_MainWindow(object):
         self.NewGraph.ShowGraph()
         
     def PrepareExpressions(self):
-        self.NewGraph.ResetGraph()
-        self.BalanceIsReady = False
-        self.InfoIsReady = False
-        self.NewGraph.GetPuths(self.NewGraph.Matrix, int(self.StartVertex.text())-1, int(self.FinishVertex.text())-1, [])
-        self.NewGraph.GetPuthMatrix()
-        self.NewGraph.SetFlow(int(self.FinishVertex_2.text()))
-        text = self.EditFunc.toPlainText()
-        self.NewGraph.PrepareExpressionList(text)
-        self.InfoIsReady = True
+        error = QtWidgets.QMessageBox()
+        error.setWindowTitle("Ошибка")
+        error.setText("Поля ввода не заполнены или заполнены неверно")
+        error.setIcon(QtWidgets.QMessageBox.Warning)
+        error.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        try:
+            self.NewGraph.ResetGraph()
+            self.BalanceIsReady = False
+            self.InfoIsReady = False
+            self.NewGraph.GetPuths(self.NewGraph.Matrix, int(self.StartVertex.text())-1, int(self.FinishVertex.text())-1, [])
+            self.NewGraph.GetPuthMatrix()
+            self.NewGraph.SetFlow(int(self.FinishVertex_2.text()))
+            text = self.EditFunc.toPlainText()
+            self.NewGraph.PrepareExpressionList(text)
+            self.InfoIsReady = True
+        except ValueError:
+            error.exec_()
+        except IndexError:
+            error.exec_()
 
     def ShowBalance(self):
         text = ""
