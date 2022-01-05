@@ -11,7 +11,7 @@
 	<p>
         По умолчанию в папке с приложением уже есть граф, однако вы можете ввести свой граф
         <p>
-        Нарисуйте граф на данном сайте https://programforyou.ru/graph-redactor и скачайте .dot в папку с программой
+        Нарисуйте граф на данном сайте https://programforyou.ru/graph-redactor и скачайте .dot в папку с программой( Название графа обязательно должно быть "graph.dot")
         
   
 ![1](https://user-images.githubusercontent.com/77242899/148102320-982b8332-de6c-4944-a6f4-b6564aafb391.png)
