@@ -99,7 +99,7 @@ class Graph:
                     self.GetPuths(matrix, i, finish, visited.copy())
     
     def GetPuthMatrix(self):
-        self.PuthsMatrix= []
+        self.PuthsMatrix = []
         for i in range(self.EdgesCount):
             self.PuthsMatrix.append([0]*self.PuthsCount)
             
@@ -108,7 +108,7 @@ class Graph:
                 for k in range(len(self.StartVertices)):
                     if self.StartVertices[k] == self.Puths[i][j] and self.FinishVertices[k] == self.Puths[i][j+1]:
                         self.PuthsMatrix[k][i] = 1
-            
+                        
     """ Класс функции ребра"""
     class Edge:
         coef = np.array(0) # Коэффициенты при x
@@ -151,12 +151,12 @@ class Graph:
                 for j in range(self.PuthsCount): # Оставльные потоки тоже нужно учитывать
                     if Paths[i][j] and InBalance[j]:
                         coefs[j] += EdgesExpressionList[i].coef
-                        frees[0] -= EdgesExpressionList[i].free
+                frees[0] -= EdgesExpressionList[i].free
             if Paths[i][NpathB]:
                 for j in range(self.PuthsCount): # Минусуем все переменные, т.к перенос
                     if Paths[i][j] and InBalance[j]:
                         coefs[j] -= EdgesExpressionList[i].coef
-                        frees[0] += EdgesExpressionList[i].free
+                frees[0] += EdgesExpressionList[i].free
         
         result = []
         result.append(coefs)
@@ -251,6 +251,8 @@ class Graph:
             for road in range(len(res)):
                 if res[road] > 0:
                     InBalanceIndex = road
+            if(self.PathTime(InBalanceIndex, res, 1) < 0):
+                GoodBalance = False        
             if(GoodBalance): 
                 AllBalances.append(res)
                 self.BalanceTime = self.PathTime(InBalanceIndex, res, 1)
