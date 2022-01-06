@@ -12,7 +12,6 @@ import graph
 import numpy as np
 from scipy.linalg import solve
 
-
 class Ui_MainWindow(object):
     
     NewGraph = graph.Graph()
@@ -30,73 +29,142 @@ class Ui_MainWindow(object):
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
         self.EditFunc = QtWidgets.QTextEdit(self.centralwidget)
-        self.EditFunc.setGeometry(QtCore.QRect(100, 310, 361, 181))
+        self.EditFunc.setGeometry(QtCore.QRect(110, 310, 361, 181))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.EditFunc.sizePolicy().hasHeightForWidth())
+        self.EditFunc.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(9)
         self.EditFunc.setFont(font)
         self.EditFunc.setObjectName("EditFunc")
         self.label = QtWidgets.QLabel(self.centralwidget)
         self.label.setGeometry(QtCore.QRect(20, 270, 441, 31))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label.sizePolicy().hasHeightForWidth())
+        self.label.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(16)
         self.label.setFont(font)
         self.label.setObjectName("label")
-        self.EntryOrder = QtWidgets.QLabel(self.centralwidget)
-        self.EntryOrder.setGeometry(QtCore.QRect(20, 310, 81, 241))
-        font = QtGui.QFont()
-        font.setPointSize(9)
-        self.EntryOrder.setFont(font)
-        self.EntryOrder.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.EntryOrder.setText("")
-        self.EntryOrder.setAlignment(QtCore.Qt.AlignLeading|QtCore.Qt.AlignLeft|QtCore.Qt.AlignTop)
-        self.EntryOrder.setObjectName("EntryOrder")
         self.ShowGraph = QtWidgets.QPushButton(self.centralwidget)
         self.ShowGraph.setGeometry(QtCore.QRect(20, 20, 251, 41))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ShowGraph.sizePolicy().hasHeightForWidth())
+        self.ShowGraph.setSizePolicy(sizePolicy)
         self.ShowGraph.setObjectName("ShowGraph")
         self.DoBalance = QtWidgets.QPushButton(self.centralwidget)
         self.DoBalance.setGeometry(QtCore.QRect(20, 80, 251, 41))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.DoBalance.sizePolicy().hasHeightForWidth())
+        self.DoBalance.setSizePolicy(sizePolicy)
         self.DoBalance.setObjectName("DoBalance")
         self.ShowBadRoad = QtWidgets.QPushButton(self.centralwidget)
         self.ShowBadRoad.setGeometry(QtCore.QRect(20, 140, 251, 41))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ShowBadRoad.sizePolicy().hasHeightForWidth())
+        self.ShowBadRoad.setSizePolicy(sizePolicy)
         self.ShowBadRoad.setObjectName("ShowBadRoad")
         self.FuncReady = QtWidgets.QPushButton(self.centralwidget)
         self.FuncReady.setGeometry(QtCore.QRect(350, 510, 141, 41))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.FuncReady.sizePolicy().hasHeightForWidth())
+        self.FuncReady.setSizePolicy(sizePolicy)
         self.FuncReady.setObjectName("FuncReady")
         self.label_2 = QtWidgets.QLabel(self.centralwidget)
         self.label_2.setGeometry(QtCore.QRect(510, 310, 61, 21))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_2.sizePolicy().hasHeightForWidth())
+        self.label_2.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label_2.setFont(font)
         self.label_2.setObjectName("label_2")
         self.label_3 = QtWidgets.QLabel(self.centralwidget)
         self.label_3.setGeometry(QtCore.QRect(510, 360, 51, 21))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_3.sizePolicy().hasHeightForWidth())
+        self.label_3.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label_3.setFont(font)
         self.label_3.setObjectName("label_3")
         self.StartVertex = QtWidgets.QLineEdit(self.centralwidget)
         self.StartVertex.setGeometry(QtCore.QRect(580, 310, 113, 22))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.StartVertex.sizePolicy().hasHeightForWidth())
+        self.StartVertex.setSizePolicy(sizePolicy)
         self.StartVertex.setObjectName("StartVertex")
         self.FinishVertex = QtWidgets.QLineEdit(self.centralwidget)
         self.FinishVertex.setGeometry(QtCore.QRect(580, 360, 113, 22))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.FinishVertex.sizePolicy().hasHeightForWidth())
+        self.FinishVertex.setSizePolicy(sizePolicy)
         self.FinishVertex.setObjectName("FinishVertex")
         self.label_4 = QtWidgets.QLabel(self.centralwidget)
         self.label_4.setGeometry(QtCore.QRect(510, 410, 61, 21))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.label_4.sizePolicy().hasHeightForWidth())
+        self.label_4.setSizePolicy(sizePolicy)
         font = QtGui.QFont()
         font.setPointSize(14)
         self.label_4.setFont(font)
         self.label_4.setObjectName("label_4")
         self.FinishVertex_2 = QtWidgets.QLineEdit(self.centralwidget)
         self.FinishVertex_2.setGeometry(QtCore.QRect(580, 410, 113, 22))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.FinishVertex_2.sizePolicy().hasHeightForWidth())
+        self.FinishVertex_2.setSizePolicy(sizePolicy)
         self.FinishVertex_2.setObjectName("FinishVertex_2")
         self.ResultWindow = QtWidgets.QScrollArea(self.centralwidget)
         self.ResultWindow.setGeometry(QtCore.QRect(320, 20, 451, 231))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.ResultWindow.sizePolicy().hasHeightForWidth())
+        self.ResultWindow.setSizePolicy(sizePolicy)
         self.ResultWindow.setWidgetResizable(True)
         self.ResultWindow.setObjectName("ResultWindow")
         self.scrollAreaWidgetContents = QtWidgets.QWidget()
         self.scrollAreaWidgetContents.setGeometry(QtCore.QRect(0, 0, 449, 229))
         self.scrollAreaWidgetContents.setObjectName("scrollAreaWidgetContents")
         self.ResultWindow.setWidget(self.scrollAreaWidgetContents)
+        self.EntryOrder_2 = QtWidgets.QScrollArea(self.centralwidget)
+        self.EntryOrder_2.setGeometry(QtCore.QRect(20, 310, 81, 241))
+        sizePolicy = QtWidgets.QSizePolicy(QtWidgets.QSizePolicy.Fixed, QtWidgets.QSizePolicy.Fixed)
+        sizePolicy.setHorizontalStretch(0)
+        sizePolicy.setVerticalStretch(0)
+        sizePolicy.setHeightForWidth(self.EntryOrder_2.sizePolicy().hasHeightForWidth())
+        self.EntryOrder_2.setSizePolicy(sizePolicy)
+        self.EntryOrder_2.setWidgetResizable(True)
+        self.EntryOrder_2.setObjectName("EntryOrder_2")
+        self.scrollAreaWidgetContents_2 = QtWidgets.QWidget()
+        self.scrollAreaWidgetContents_2.setGeometry(QtCore.QRect(0, 0, 79, 239))
+        self.scrollAreaWidgetContents_2.setObjectName("scrollAreaWidgetContents_2")
+        self.EntryOrder_2.setWidget(self.scrollAreaWidgetContents_2)
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 819, 22))
@@ -137,7 +205,9 @@ class Ui_MainWindow(object):
         text = ""
         for i in range(self.NewGraph.EdgesCount):
             text += str(self.NewGraph.StartVertices[i]+1) + "->" + str(self.NewGraph.FinishVertices[i]+1) + "\n"
-        self.EntryOrder.setText(text)
+            
+        widget = QtWidgets.QLabel(text)
+        self.EntryOrder_2.setWidget(widget)
             
     def DrawGraph(self):
         self.NewGraph.ShowGraph()
@@ -164,66 +234,88 @@ class Ui_MainWindow(object):
             error.exec_()
 
     def ShowBalance(self):
-        text = ""
+        error = QtWidgets.QMessageBox()
+        error.setWindowTitle("Ошибка")
+        error.setText("Поля ввода не заполнены или заполнены неверно")
+        error.setIcon(QtWidgets.QMessageBox.Warning)
+        error.setStandardButtons(QtWidgets.QMessageBox.Ok)
         
-        if self.InfoIsReady: 
-            AllBalances = self.NewGraph.FindBalance()
+        try:
+            text = ""
             
-            # Вывод всех путей от S до F
-            for i in range(len(self.NewGraph.Puths)):
-                text += "Путь " + str(i+1) +": "
-                for j in range(len(self.NewGraph.Puths[i])):
-                    text += str(self.NewGraph.Puths[i][j]+1)
-                    if j != len(self.NewGraph.Puths[i])-1:
-                        text += "->"
-                    else:
-                        text += "\n"
-                        
-            if len(AllBalances) == 0:
-                text += "Равнновесные распределения не найдены\n"
-            else:
-                self.BalanceIsReady = True
-                text += "Равновесное распределение: \n"
+            if self.InfoIsReady: 
+                AllBalances = self.NewGraph.FindBalance()
+                
+                # Вывод всех путей от S до F
                 for i in range(len(self.NewGraph.Puths)):
                     text += "Путь " + str(i+1) +": "
-                    for j in range(len(AllBalances)):
-                        text += str(j+1) + ") "
-                        text += str(round(AllBalances[j][i][0], 2))
-                        text += " "
-                    text += "\n" 
-                
-                text += "Время: " + str(round(self.NewGraph.BalanceTime[0], 2)) + "\n"     
-        else:
-            text += "Введите информацию о графе!\n"
-            
-        widget = QtWidgets.QLabel(text)
-        self.ResultWindow.setWidget(widget)
-        
-    def FindBadRoad(self):
-        text = ""
-        if self.BalanceIsReady:
-            if self.InfoIsReady: 
-                res = self.NewGraph.FindUneffective()
-                if len(res) != 0:
-                    if len(res) > 1:
-                        l = len(res)-1
-                    else:
-                        l = len(res)
-                    for i in range(l):
-                        text += "Неэффективная дорога: " + str(self.NewGraph.StartVertices[res[i][0]]+1) + " -> " + str(self.NewGraph.FinishVertices[res[i][0]]+1) + "\n"
-                        text += "Время без данной дороги: " + str(round(res[i][1][0], 2)) + "\n"     
-                    
-                    if len(res) > 1:
-                        text += "Время без всех неэффективных дорог: " + str(res[len(res)-1][0]) + "\n"   
+                    for j in range(len(self.NewGraph.Puths[i])):
+                        text += str(self.NewGraph.Puths[i][j]+1)
+                        if j != len(self.NewGraph.Puths[i])-1:
+                            text += "->"
+                        else:
+                            text += "\n"
+                            
+                if len(AllBalances) == 0:
+                    text += "Равнновесные распределения не найдены\n"
                 else:
-                    text += "Неэффективные дороги не найдены \n"
+                    self.BalanceIsReady = True
+                    text += "Равновесное распределение: \n"
+                    for i in range(len(self.NewGraph.Puths)):
+                        text += "Путь " + str(i+1) +": "
+                        for j in range(len(AllBalances)):
+                            text += str(j+1) + ") "
+                            text += str(round(AllBalances[j][i][0], 2))
+                            text += " "
+                        text += "\n" 
+                    
+                    text += "Время: " + str(round(self.NewGraph.BalanceTime[0], 2)) + "\n"     
             else:
                 text += "Введите информацию о графе!\n"
-        else:
-            text += "Сначала найдите распределение!\n"
+                
+            widget = QtWidgets.QLabel(text)
+            self.ResultWindow.setWidget(widget)
+        except ValueError:
+            error.exec_()
+        except IndexError:
+            error.exec_()
         
-        widget = QtWidgets.QLabel(text)
-        self.ResultWindow.setWidget(widget)
+    def FindBadRoad(self):
+        error = QtWidgets.QMessageBox()
+        error.setWindowTitle("Ошибка")
+        error.setText("Поля ввода не заполнены или заполнены неверно")
+        error.setIcon(QtWidgets.QMessageBox.Warning)
+        error.setStandardButtons(QtWidgets.QMessageBox.Ok)
+        try:
+            text = ""
+            if self.BalanceIsReady:
+                if self.InfoIsReady: 
+                    res = self.NewGraph.FindUneffective()
+                    if len(res) != 0:
+                        if len(res) > 1:
+                            l = len(res)-1
+                        else:
+                            l = len(res)
+                        for i in range(l):
+                            text += "Неэффективная дорога: " + str(self.NewGraph.StartVertices[res[i][0]]+1) + " -> " + str(self.NewGraph.FinishVertices[res[i][0]]+1) + "\n"
+                            text += "Время без данной дороги: " + str(round(res[i][1][0], 2)) + "\n\n"     
+                        
+                        if len(res) > 1:
+                            text += "Время без всех неэффективных дорог: " + str(res[len(res)-1][0]) + "\n"   
+                    else:
+                        text += "Неэффективные дороги не найдены \n"
+                else:
+                    text += "Введите информацию о графе!\n"
+            else:
+                text += "Сначала найдите распределение!\n"
+            
+            widget = QtWidgets.QLabel(text)
+            self.ResultWindow.setWidget(widget)
+        
+        except ValueError:
+            error.exec_()
+        except IndexError:
+            error.exec_()
 
 if __name__ == "__main__":
     import sys

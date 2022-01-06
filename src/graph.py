@@ -248,6 +248,9 @@ class Graph:
                         GoodBalance = False
                         break
             
+            for road in range(len(res)):
+                if res[road] > 0:
+                    InBalanceIndex = road
             if(GoodBalance): 
                 AllBalances.append(res)
                 self.BalanceTime = self.PathTime(InBalanceIndex, res, 1)
@@ -260,7 +263,7 @@ class Graph:
         OLD_TIME = self.BalanceTime
         for i in range(self.EdgesCount):
             temp = self.EdgesExpressionList[i].free # Запоминаем свободный член
-            self.EdgesExpressionList[i].free = MAX # Закрываем дорогу
+            self.EdgesExpressionList[i].free = np.array(MAX) # Закрываем дорогу
         
             NewAllBalances = self.FindBalance()
         
