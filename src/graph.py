@@ -68,6 +68,8 @@ class Graph:
         self.PuthsCount = 0
     
     def SetFlow(self, flow):
+        if flow < 0: # Если поток меньше 0, то вызываем IndexError
+            self.Puths[len(self.Puths)]
         self.Flow = flow
             
     def ShowGraph(self):
@@ -89,6 +91,9 @@ class Graph:
         
     def GetPuths(self, matrix, start, finish, visited: list):
         visited.append(start)
+    
+        if start < 0 or finish < 0: # Если старт или виниш отрицательны, то вызываем IndexError
+            visited[len(visited)]
     
         for i in range(self.VertexCount):
             if matrix[start][i] == 1 and i not in visited:
