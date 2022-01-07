@@ -22,6 +22,7 @@ class Graph:
     Puths = [] # Список всех путей от истока до стока
     PuthsMatrix = [] # Матрица путей для рёбер
     EdgesExpressionList = [] # Список функций для рёбер
+    AllBalancess = [] # Список всех равновесных распределений
     Flow = 0
     BalanceTime = 0 # Общее время в пути для равновесия
     PuthsCount = 0
@@ -115,19 +116,26 @@ class Graph:
         free = np.array(0) # Свободные члены
 
         def __init__(self, expression: str):
+            if 'x' not in expression: # Если 'x' нет в выражении, то вызываем ошибку IndexError
+                expression[len(expression)]
+                
             wx = expression.split()[0]
             wx = wx[0:len(wx)-1]
+            
             self.coef = np.delete(self.coef, 0)
             self.free = np.delete(self.free, 0)
+            
             if(len(wx) == 0):
                 self.coef = np.append(self.coef, 1)
             else:
                 self.coef = np.append(self.coef, int(wx))
             if(len(wx)+1 != len(expression)):
-                if(expression.split()[1] == '-'):
+                if expression.split()[1] == '-':
                     self.free = np.append(self.free, float(expression.split()[2])*(-1))
-                else:
+                elif expression.split()[1] == '+':
                     self.free = np.append(self.free, float(expression.split()[2]))
+                else: # Если в выражении не знак + или -, то вызываем IndexError
+                    expression[len(expression)]
             else:
                 self.free = np.append(self.free, float(0))
     
@@ -259,7 +267,7 @@ class Graph:
                 AllBalances.append(res)
                 self.BalanceTime = self.PathTime(InBalanceIndex, res, 1)
                     
-        return AllBalances
+        self.AllBalancess = AllBalances
         
     # Поиск неэффективной дороги
     def FindUneffective(self):
@@ -278,7 +286,7 @@ class Graph:
                 UneffectiveEdges.append(temp_time)
             
             self.EdgesExpressionList[i].free = temp # Открываем дорогу, чтобы проверить другие
-            self.FindBalance()
+        self.FindBalance()
             
         if len(UneffectiveEdges) > 1:
             old_frees = []
@@ -286,12 +294,12 @@ class Graph:
             for i in range(len(UneffectiveEdges)):
                 old_frees.append(self.EdgesExpressionList[UneffectiveEdges[i][0]].free)
                 self.EdgesExpressionList[UneffectiveEdges[i][0]].free = MAX # Закрываем все дороги
-            self.FindBalance()
+            self.FindBalance() # Находим равновесие
             UneffectiveEdges.append(self.BalanceTime)
             
             for i in range(len(UneffectiveEdges)-1):
                 self.EdgesExpressionList[UneffectiveEdges[i][0]].free = old_frees[i] # Открываем все дороги
-            self.FindBalance()
+            self.FindBalance() # Находим равновесие
         
         return UneffectiveEdges
         

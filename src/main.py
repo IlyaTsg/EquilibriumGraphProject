@@ -243,8 +243,11 @@ class Ui_MainWindow(object):
         try:
             text = ""
             
-            if self.InfoIsReady: 
-                AllBalances = self.NewGraph.FindBalance()
+            if self.InfoIsReady:
+                if not self.BalanceIsReady: # Если равновесные ситуации не найдены, то находим равновесные ситуации
+                    self.NewGraph.FindBalance()
+                
+                AllBalances = self.NewGraph.AllBalancess
                 
                 # Вывод всех путей от S до F
                 for i in range(len(self.NewGraph.Puths)):
