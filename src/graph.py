@@ -128,6 +128,8 @@ class Graph:
             if(len(wx) == 0):
                 self.coef = np.append(self.coef, 1)
             else:
+                if(int(wx) < 0): # Если коеф при x отрицательный, то вызываем ошибку IndexError
+                    expression[len(expression)]
                 self.coef = np.append(self.coef, int(wx))
             if(len(wx)+1 != len(expression)):
                 if expression.split()[1] == '-':
