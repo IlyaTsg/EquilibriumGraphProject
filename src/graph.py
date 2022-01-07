@@ -241,19 +241,21 @@ class Graph:
                     GoodBalance = False
                     break
             
-            InBalanceIndex = InBalance[i].index(1)
-            for j in range(len(InBalance[i])):
-                if InBalance[i][j] == 0: # Если не входит в распределение
+            for road in range(len(res)):
+                if res[road] > 0:
+                    InBalanceIndex = road
+                    break
+                    
+            for j in range(self.PuthsCount):
+                if res[j] == 0: # Если не входит в распределение
                     if self.PathTime(j, res, 0) < self.PathTime(InBalanceIndex, res, 0): # Для всех неиспользуемых время в пути не ниже используемых
                         GoodBalance = False
                         break
             
-            for road in range(len(res)):
-                if res[road] > 0:
-                    InBalanceIndex = road
-            if(self.PathTime(InBalanceIndex, res, 1) < 0):
+            if self.PathTime(InBalanceIndex, res, 1) < 0:
                 GoodBalance = False        
-            if(GoodBalance): 
+                
+            if GoodBalance: 
                 AllBalances.append(res)
                 self.BalanceTime = self.PathTime(InBalanceIndex, res, 1)
                     
