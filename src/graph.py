@@ -294,19 +294,6 @@ class Graph:
             
             self.EdgesExpressionList[i].free = temp # Открываем дорогу, чтобы проверить другие
         self.FindBalance()
-            
-        if len(UneffectiveEdges) > 1:
-            old_frees = []
-            
-            for i in range(len(UneffectiveEdges)):
-                old_frees.append(self.EdgesExpressionList[UneffectiveEdges[i][0]].free)
-                self.EdgesExpressionList[UneffectiveEdges[i][0]].free = MAX # Закрываем все дороги
-            self.FindBalance() # Находим равновесие
-            UneffectiveEdges.append(self.BalanceTime)
-            
-            for i in range(len(UneffectiveEdges)-1):
-                self.EdgesExpressionList[UneffectiveEdges[i][0]].free = old_frees[i] # Открываем все дороги
-            self.FindBalance() # Находим равновесие
-        
+                  
         return UneffectiveEdges
         

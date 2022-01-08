@@ -301,10 +301,7 @@ class Ui_MainWindow(object):
                             l = len(res)
                         for i in range(l):
                             text += "Неэффективная дорога: " + str(self.NewGraph.StartVertices[res[i][0]]+1) + " -> " + str(self.NewGraph.FinishVertices[res[i][0]]+1) + "\n"
-                            text += "Время без данной дороги: " + str(round(res[i][1][0], 2)) + "\n\n"     
-                        
-                        if len(res) > 1:
-                            text += "Время без всех неэффективных дорог: " + str(res[len(res)-1][0]) + "\n"   
+                            text += "Время без данной дороги: " + str(round(res[i][1][0], 2)) + "\n\n" 
                     else:
                         text += "Неэффективные дороги не найдены \n"
                 else:
